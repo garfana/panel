@@ -1,0 +1,282 @@
+<%- include('./components/top') %>
+<!-- Main Content -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/AlertifyJS/1.13.1/css/alertify.css" integrity="sha512-MpdEaY2YQ3EokN6lCD6bnWMl5Gwk7RjBbpKLovlrH6X+DRokrPRAF3zQJl1hZUiLXfo2e9MrOt+udOnHCAmi5w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<main class="flex-grow container mx-auto px-4 py-8">
+    <div class="justify-center w-full mx-auto">
+        <div class="flex">
+        <nav aria-label="Breadcrumb" class="border border-white/15 w-64 mb-5 inline-flex py-1.5 px-3.5 rounded-full bg-white/5 shadow">
+            <ol role="list" class="flex items-center space-x-2">
+                <li>
+                    <a href="#_" class="text-sm flex items-center gap-2 text-zinc-400 duration-200 hover:text-zinc-300" aria-current="false">
+                        <svg
+                            aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            class="icon icon-tabler size-5 icons-tabler-outline icon-tabler-home"
+                        >
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                            <path d="M5 12l-2 0l9 -9l9 9l-2 0"></path>
+                            <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"></path>
+                            <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"></path>
+                        </svg>
+                        <span>Home</span>
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            class="icon icon-tabler icons-tabler-outline icon-tabler-slash size-4"
+                        >
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                            <path d="M17 5l-10 14"></path>
+                        </svg>
+                    </a>
+                </li>
+                <li>
+                    <a href="#_" class="text-sm flex items-center gap-2 font-medium text-white/80 duration-200" aria-current="false">
+                        New Server
+                    </a>
+                </li>
+            </ol>
+        </nav>
+      <span class="text-gray-600 text-md ml-5 mt-1">•</span>
+      <h1 class="text-2xl font-semibold mt-0.5 ml-5 mb-0.5" style="font-family: 'Space Grotesk';">Welcome back, <%= req.session.userinfo.username %>.</h1> 
+      </div>
+    </div>
+
+    <!-- Content -->
+
+  <!-- Error Messages -->
+  <% if (req.query.err) { %>
+    <div class="rounded-lg bg-red-800 p-4 mb-8">
+      <div class="flex">
+        <div class="flex-shrink-0">
+          <svg class="h-5 w-5 text-red-300" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+          </svg>
+        </div>
+        <div class="ml-3">
+          <h3 class="text-sm font-medium text-red-300">
+            Error Creating Server
+          </h3>
+          <div class="mt-2 text-sm text-red-200">
+            <p>
+              <%= (() => {
+                switch(req.query.err) {
+                  case "MISSINGVARIABLE":
+                    return "You have not filled out all of the server information.";
+                  case "ERRORONCREATE":
+                    return "Failed to create server! This is most likely an issue on XEH's end, not yours.";
+                  case "MISSINGEGG":
+                    return "The server type for this server is not registered as a valid server type, therefore your server's RAM, disk and/or CPU could not be changed.";
+                  case "TOOLITTLERAM":
+                  case "TOOLITTLEDISK":
+                  case "TOOLITTLECPU":
+                    return `You must make a server with at least <b>${req.query.num}</b> ${req.query.err.slice(-3) === "RAM" ? "MB RAM" : req.query.err.slice(-4) === "DISK" ? "MB disk" : "% CPU"} if you want to create a server with the server type you have selected.`;
+                  case "TOOMUCHRAM":
+                  case "TOOMUCHDISK":
+                  case "TOOMUCHCPU":
+                    return `With the selected server type, you can have a maximum of <b>${req.query.num}</b> ${req.query.err.slice(-3) === "RAM" ? "MB RAM" : req.query.err.slice(-4) === "DISK" ? "MB disk" : "% CPU"} on the server.`;
+                  case "EXCEEDRAM":
+                  case "EXCEEDDISK":
+                  case "EXCEEDCPU":
+                    return "The server could not be created because you have requested to create a server that exceeds your plan.";
+                  default:
+                    return "An unknown error occurred. Please try again or contact support if the issue persists.";
+                }
+              })() %>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% } %>
+
+  <div>
+    <div>
+      <form id="createServerForm">
+        <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+          <div class="sm:col-span-3">
+            <label for="name" class="block text-sm font-medium text-gray-400">
+              Server Name
+            </label>
+            <div class="mt-1">
+              <input type="text" name="name" id="name" class="transition ease-in-out delay-100 shadow-sm block w-full sm:text-sm rounded-lg bg-white/5 text-white border-white/5 focus:ring-orange-500 focus:border-orange-500" placeholder="my-awesome-server">
+            </div>
+          </div>
+
+          <div class="sm:col-span-6">
+            <label for="about" class="block text-sm font-medium text-gray-400">
+              Description
+            </label>
+            <div class="mt-1">
+              <textarea id="about" name="about" rows="3" class="transition ease-in-out delay-100 shadow-sm block w-full sm:text-sm rounded-lg bg-white/5 text-white border-white/5 focus:ring-orange-500 focus:border-orange-500" placeholder="A brief description of your server..."></textarea>
+            </div>
+            <p class="mt-2 text-sm text-gray-300">Brief description for your server. This can be changed on the Panel.</p>
+          </div>
+
+          <div class="sm:col-span-6">
+            <label class="block text-sm font-medium text-gray-400">
+              Location
+            </label>
+            <div class="mt-1 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              <% const locations = [
+                { id: "2", name: "Kansas City", country: "United States", flag: "https://cdn-icons-png.flaticon.com/512/299/299722.png" },
+                { id: "3", name: "Falkenstein", country: "Germany", flag: "https://cdn-icons-png.flaticon.com/512/299/299786.png" }
+              ] %>
+              <% locations.forEach(location => { %>
+                <div class="relative flex items-center space-x-3 rounded-xl border border-white/5 bg-white/5 px-6 py-5 shadow-sm focus-within:ring-2 focus-within:ring-white/15 transition focus-within:ring-offset-0 hover:bg-white/10">
+                  <div class="flex-shrink-0">
+                    <img class="h-10 w-10" src="<%= location.flag %>" alt="">
+                  </div>
+                  <div class="min-w-0 flex-1">
+                    <a href="#" class="focus:outline-none" onclick="selectLocation('<%= location.id %>', '<%= location.name %>', '<%= location.country %>')">
+                      <span class="absolute inset-0" aria-hidden="true"></span>
+                      <p class="text-sm font-medium text-white"><%= location.name %></p>
+                      <p class="text-sm text-gray-400 truncate"><%= location.country %></p>
+                    </a>
+                  </div>
+                </div>
+              <% }) %>
+            </div>
+          </div>
+
+          <div class="sm:col-span-6">
+            <label class="block text-sm font-medium text-gray-400">
+              Server Image
+            </label>
+            <div class="mt-1 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              <% const images = [
+                { id: "paper", name: "Paper", category: "MC Java", logo: "https://avatars.githubusercontent.com/u/7608950?s=200&v=4" },
+                { id: "velocity", name: "Velocity", category: "MC Java", logo: "https://avatars.githubusercontent.com/u/41710604?s=200&v=4" },
+                { id: "vanillabugrock", name: "Vanilla", category: "MC Bedrock", logo: "https://i.ibb.co/mF6bCBs/image.png" },
+                { id: "pmmpbugrock", name: "PocketMine", category: "MC Bedrock", logo: "https://i.ibb.co/mF6bCBs/image.png" }
+              ] %>
+              <% images.forEach(image => { %>
+                <div class="relative flex items-center space-x-3 rounded-xl border border-white/5 bg-white/5 px-6 py-5 shadow-sm focus-within:ring-2 focus-within:ring-white/15 transition focus-within:ring-offset-0 hover:bg-white/10">
+                  <div class="flex-shrink-0">
+                    <img class="h-10 w-10 rounded-2xl" src="<%= image.logo %>" alt="">
+                  </div>
+                  <div class="min-w-0 flex-1">
+                    <a href="#" class="focus:outline-none" onclick="selectImage('<%= image.id %>', '<%= image.name %>')">
+                      <span class="absolute inset-0" aria-hidden="true"></span>
+                      <p class="text-sm font-medium text-white"><%= image.name %></p>
+                      <p class="text-sm text-gray-400 truncate"><%= image.category %></p>
+                    </a>
+                  </div>
+                </div>
+              <% }) %>
+            </div>
+          </div>
+
+          <%
+            let ram = 0;
+            let disk = 0;
+            let cpu = 0;
+            let servers = pterodactyl.relationships.servers.data.length;
+            for (let i = 0, len = pterodactyl.relationships.servers.data.length; i < len; i++) {
+              ram = ram + (typeof pterodactyl.relationships.servers.data[i].attributes.limits.memory == "number" ? pterodactyl.relationships.servers.data[i].attributes.limits.memory : 0);
+              disk = disk + (typeof pterodactyl.relationships.servers.data[i].attributes.limits.disk == "number" ? pterodactyl.relationships.servers.data[i].attributes.limits.disk : 0);
+              cpu = cpu + (typeof pterodactyl.relationships.servers.data[i].attributes.limits.cpu == "number" ? pterodactyl.relationships.servers.data[i].attributes.limits.cpu : 0);
+            }
+          %>
+
+          <div class="sm:col-span-2">
+            <label for="ram" class="block text-sm font-medium text-gray-400">
+              RAM (GB)
+            </label>
+            <div class="mt-1">
+              <input type="number" name="ram" id="ram" class="transition ease-in-out delay-100 shadow-sm block w-full sm:text-sm rounded-lg bg-white/5 border-white/5 text-white focus:ring-orange-500 focus:border-orange-500" value="<%= ((packages ? packages.ram : 0)/1024 + extraresources.ram/1024 - ram/1024).toFixed(2) %>">
+            </div>
+          </div>
+
+          <div class="sm:col-span-2">
+            <label for="cpu" class="block text-sm font-medium text-gray-400">
+              CPU (%)
+            </label>
+            <div class="mt-1">
+              <input type="number" name="cpu" id="cpu" class="transition ease-in-out delay-100 shadow-sm block w-full sm:text-sm rounded-lg bg-white/5 border-white/5 text-white focus:ring-orange-500 focus:border-orange-500" value="<%= (packages ? packages.cpu : 0) + extraresources.cpu - cpu %>">
+            </div>
+          </div>
+
+          <div class="sm:col-span-2">
+            <label for="disk" class="block text-sm font-medium text-gray-400">
+              Disk (GB)
+            </label>
+            <div class="mt-1">
+              <input type="number" name="disk" id="disk" class="transition ease-in-out delay-100 shadow-sm block w-full sm:text-sm rounded-lg bg-white/5 border-white/5 text-white focus:ring-orange-500 focus:border-orange-500" value="<%= ((packages ? packages.disk : 0)/1024 + extraresources.disk/1024 - disk/1024).toFixed(2) %>">
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <button onclick="submitForm()" class="transition ease-in-out mt-5 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-lg text-orange-100 bg-orange-600 transition hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500">
+        Create Server
+      </button>
+  </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/AlertifyJS/1.13.1/alertify.js" integrity="sha512-eOUPKZXJTfgptSYQqVilRmxUNYm0XVHwcRHD4mdtCLWf/fC9XWe98IT8H1xzBkLL4Mo9GL0xWMSJtgS5te9rQA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+let selectedLocation = "";
+let selectedImage = "";
+
+function selectLocation(id, name, country) {
+  selectedLocation = id;
+  alertify.success(`Selected location: ${name}, ${country}`);
+}
+
+function selectImage(id, name) {
+  selectedImage = id;
+  alertify.success(`Selected image: ${name}`);
+}
+
+async function submitForm() {
+  const form = document.getElementById('createServerForm');
+  const formData = new FormData(form);
+  
+  const name = encodeURIComponent(formData.get('name'));
+  const ram = encodeURIComponent(parseFloat(formData.get('ram')) * 1024);
+  const disk = encodeURIComponent(parseFloat(formData.get('disk')) * 1024);
+  const cpu = encodeURIComponent(formData.get('cpu'));
+  
+  if (!name || !ram || !disk || !cpu || !selectedLocation || !selectedImage) {
+    alertify.error('Please fill out all fields and select a location and image.');
+    return;
+  }
+
+  const url = `/create?name=${name}&egg=${selectedImage}&ram=${ram}&disk=${disk}&cpu=${cpu}&location=${selectedLocation}`;
+  
+  window.location.href = url;
+}
+
+// Initialize Alertify
+alertify.set('notifier','position', 'top-right');
+</script>
+
+<style>
+  /* Custom styles for Alertify */
+  .alertify-notifier .ajs-message.ajs-success {
+    background: #2b303b;
+    color: white;
+    border-radius: 10px;
+  }
+  .alertify-notifier .ajs-message.ajs-error {
+    background: #2b303b;
+    color: #f87171;
+    border-radius: 10px;
+  }
+  .alertify-notifier.ajs-right {
+    right: 10px;
+  }
+</style>
+    
+</main>
+<%- include('./components/bottom') %>

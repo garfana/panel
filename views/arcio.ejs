@@ -1,0 +1,77 @@
+<%- include('./components/top') %>
+<!-- Main Content -->
+<main class="flex-grow container mx-auto px-4 py-8">
+    <div class="justify-center w-full mx-auto">
+        <div class="flex">
+        <nav aria-label="Breadcrumb" class="border border-white/15 w-64 mb-5 inline-flex py-1.5 px-3.5 rounded-full bg-white/5 shadow">
+            <ol role="list" class="flex items-center space-x-2">
+                <li>
+                    <a href="#_" class="text-sm flex items-center gap-2 text-zinc-400 duration-200 hover:text-zinc-300" aria-current="false">
+                        <svg
+                            aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            class="icon icon-tabler size-5 icons-tabler-outline icon-tabler-home"
+                        >
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                            <path d="M5 12l-2 0l9 -9l9 9l-2 0"></path>
+                            <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"></path>
+                            <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"></path>
+                        </svg>
+                        <span>Home</span>
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            class="icon icon-tabler icons-tabler-outline icon-tabler-slash size-4"
+                        >
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                            <path d="M17 5l-10 14"></path>
+                        </svg>
+                    </a>
+                </li>
+                <li>
+                    <a href="#_" class="text-sm flex items-center gap-2 font-medium text-white/80 duration-200" aria-current="false">
+                        AFK Page
+                    </a>
+                </li>
+            </ol>
+        </nav>
+      <span class="text-gray-600 text-md ml-5 mt-1">•</span>
+      <h1 class="text-2xl font-semibold mt-0.5 ml-5 mb-0.5" style="font-family: 'Space Grotesk';">Welcome back, <%= req.session.userinfo.username %>.</h1> 
+      </div>
+    </div>
+
+    <!-- AFK Page Content -->
+    <div class="mt-24 flex justify-center">
+        <div class="text-center">
+            <div class="mb-6">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-16 w-16 bg-white/5 p-1.5 rounded-xl border border-white/10 mx-auto text-gray-200">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.042 21.672 13.684 16.6m0 0-2.51 2.225.569-9.47 5.227 7.917-3.286-.672Zm-7.518-.267A8.25 8.25 0 1 1 20.25 10.5M8.288 14.212A5.25 5.25 0 1 1 17.25 10.5" />
+                </svg>                  
+            </div>
+            <h2 class="text-2xl font-bold mb-4">AFK Page</h2>
+            <p class="text-gray-400 mb-6">Earn BrimCoins for free, by leaving this page open. <span class="hidden" id="sessionDuration">-</span></p>
+            <form>
+                <div class="flex justify-between mb-6">
+                    <button type="button" class="bg-orange-600 text-sm font-medium text-white px-4 py-2 rounded-full hover:bg-orange-700 transition"><span id="arciotimer"></span> seconds</button>
+                    <button type="button" class="text-sm font-medium bg-gray-200 text-gray-700 px-4 py-2 rounded-full transition hover:bg-gray-300"><span id="arciogainedcoins">0</span> Coins earned</button>
+                </div>
+            </form>
+            <script>
+                <%- arcioafktext %>
+              </script>
+        </div>
+    </div>
+</main>
+
+<%- include('./components/bottom') %>

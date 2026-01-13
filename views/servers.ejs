@@ -1,0 +1,200 @@
+<%- include('./components/top') %>
+<!-- Main Content -->
+<main class="flex-grow container mx-auto px-4 py-8">
+    <div class="justify-center w-full mx-auto">
+        <div class="flex">
+        <nav aria-label="Breadcrumb" class="border border-white/15 w-64 mb-5 inline-flex py-1.5 px-3.5 rounded-full bg-white/5 shadow">
+            <ol role="list" class="flex items-center space-x-2">
+                <li>
+                    <a href="#_" class="text-sm flex items-center gap-2 text-zinc-400 duration-200 hover:text-zinc-300" aria-current="false">
+                        <svg
+                            aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            class="icon icon-tabler size-5 icons-tabler-outline icon-tabler-home"
+                        >
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                            <path d="M5 12l-2 0l9 -9l9 9l-2 0"></path>
+                            <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"></path>
+                            <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"></path>
+                        </svg>
+                        <span>Home</span>
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            class="icon icon-tabler icons-tabler-outline icon-tabler-slash size-4"
+                        >
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                            <path d="M17 5l-10 14"></path>
+                        </svg>
+                    </a>
+                </li>
+                <li>
+                    <a href="#_" class="text-sm flex items-center gap-2 font-medium text-white/80 duration-200" aria-current="false">
+                        Servers
+                    </a>
+                </li>
+            </ol>
+        </nav>
+      <span class="text-gray-600 text-md ml-5 mt-1">•</span>
+      <h1 class="text-2xl font-semibold mt-0.5 ml-5 mb-0.5" style="font-family: 'Space Grotesk';">Welcome back, <%= req.session.userinfo.username %>.</h1> 
+      </div>
+    </div>
+
+    <!-- Content -->
+    <%
+    let ram = 0;
+    let disk = 0;
+    let cpu = 0;
+    let servers = pterodactyl.relationships.servers.data.length;
+    for (let i = 0, len = pterodactyl.relationships.servers.data.length; i < len; i++) {
+       ram = ram + (typeof pterodactyl.relationships.servers.data[i].attributes.limits.memory == "number" ? pterodactyl.relationships.servers.data[i].attributes.limits.memory : 0);
+       disk = disk + (typeof pterodactyl.relationships.servers.data[i].attributes.limits.disk == "number" ? pterodactyl.relationships.servers.data[i].attributes.limits.disk : 0);
+       cpu = cpu + (typeof pterodactyl.relationships.servers.data[i].attributes.limits.cpu == "number" ? pterodactyl.relationships.servers.data[i].attributes.limits.cpu : 0);
+    }
+    %>
+<!-- Servers List -->
+<div class="mt-4 ">
+<div class="bg-white/5 mt-4 border border-white/10 shadow rounded-lg overflow-hidden">
+    <div class="px-4 py-5 sm:px-6 border-b border-white/5">
+        <div class="flex flex-col sm:flex-row sm:items-center gap-4">
+            <div class="relative w-full">
+                <h3 class="text-lg font-semibold leading-6 text-white" style="font-family: 'Space Grotesk'">Your Servers</h3>
+            </div>
+            <div class="sm:ml-auto sm:flex-none">
+              <a href="/servers/new"
+                class="flex items-center justify-center h-9 gap-2 px-5 text-sm font-medium text-white transition-all duration-200 rounded-full shadow bg-orange-600 hover:bg-orange-700 transition focus:ring-2 focus:ring-orange-800 focus:ring-offset-2 ring-offset-gray-200 hover:shadow-none w-full sm:w-auto"
+                aria-label="Action"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="icon icon-tabler icons-tabler-outline icon-tabler-plus size-4"
+                >
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                  <path d="M12 5l0 14"></path>
+                  <path d="M5 12l14 0"></path>
+                </svg>
+                New server
+            </a>
+            </div>
+          </div>
+    </div>
+    <% if (pterodactyl.relationships.servers.data.length === 0 && (!queued || !queued[0])) { %>
+      <p class="text-white text-sm p-8">
+        You don't have any active servers yet. 
+        <a href="../servers/new" class="text-orange-200 hover:text-orange-300 transition">Would you like to create one?</a>
+      </p>
+    <% } else { %>
+      <ul class="divide-y divide-white/5">
+        <% pterodactyl.relationships.servers.data.forEach(server => { %>
+          <li>
+            <a href="/servers/edit?id=<%= server.attributes.id %>" class="block group hover:bg-white/5 transition">
+              <div class="px-4 py-4 sm:px-6">
+                <div class="flex items-center justify-between">
+                  <div class="truncate">
+                    <div class="flex items-center">
+                      <p class="text-sm font-medium text-orange-300 truncate"><%= server.attributes.name %></p>
+                    </div>
+                    <div class="mt-2 flex">
+                      <div class="flex items-center text-sm text-gray-300">
+                        <%= server.attributes.description || "No description set." %>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="ml-2 flex-shrink-0 flex">
+                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full group-hover:bg-white/10 bg-white/10 text-gray-100">
+                      <%= server.attributes.limits.memory/1024 %> GiB RAM
+                    </span>
+                    <span class="ml-2 px-2 inline-flex text-xs leading-5 font-semibold rounded-full group-hover:bg-white/10 bg-white/10 text-gray-100">
+                      <%= server.attributes.limits.cpu/100 %> CPU core(s)
+                    </span>
+                    <span class="ml-2 px-2 inline-flex text-xs leading-5 font-semibold rounded-full group-hover:bg-white/10 bg-white/10 text-gray-100">
+                      <%= server.attributes.limits.disk/1024 %> GiB disk
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </a>
+          </li>
+        <% }); %>
+
+  <%
+  function getRelativeTime(isoTimestamp) {
+    const now = new Date();
+    const timestamp = new Date(isoTimestamp);
+    const diff = timestamp - now;
+    
+    if (diff < 0) return 'Unknown';
+    
+    const seconds = Math.floor(diff / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+    
+    if (days > 0) return `in ${days} day${days !== 1 ? 's' : ''}`;
+    if (hours > 0) return `in ${hours} hour${hours !== 1 ? 's' : ''}`;
+    if (minutes > 0) return `in ${minutes} minute${minutes !== 1 ? 's' : ''}`;
+    return `in ${seconds} second${seconds !== 1 ? 's' : ''}`;
+  }
+    
+  function getEstimatedTime(position) {
+    const totalMinutes = position * 1.85;
+    const hours = Math.floor(totalMinutes / 60);
+    const minutes = Math.floor(totalMinutes % 60);
+    const seconds = Math.round((totalMinutes % 1) * 60);
+    
+    let result = [];
+    if (hours > 0) result.push(`${hours} hour${hours !== 1 ? 's' : ''}`);
+    if (minutes > 0) result.push(`${minutes} minute${minutes !== 1 ? 's' : ''}`);
+    if (seconds > 0 || result.length === 0) result.push(`${seconds} second${seconds !== 1 ? 's' : ''}`);
+    
+    return result.join(', ');
+  }
+  %>
+
+        <% if (queued) { %>
+          <% queued.forEach(queuedServer => { %>
+            <li class="px-4 py-4 sm:px-6 bg-yellow-900/20">
+              <div class="flex items-center justify-between">
+                <div>
+                  <h4 class="text-sm font-medium text-white"><%= queuedServer.name %></h4>
+                  <p class="mt-1 text-xs text-yellow-400">
+                    No Available Capacity, In Queue (pos. <%= queuedServer.queuePosition %>) 
+                    — ETA: <%= getEstimatedTime(queuedServer.queuePosition) %> 
+                    — Next attempt: <%= getRelativeTime(queuedServer.queueNextAttempt) %>
+                  </p>
+                </div>
+                <div class="ml-2 flex-shrink-0 flex items-center">
+                  <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-800 text-yellow-100">
+                    Awaiting deployment
+                  </span>
+                  <a href="../queue-remove/<%= queuedServer.queuePosition %>" class="ml-2 text-xs text-red-300 hover:text-red-400 transition">
+                    Cancel
+                  </a>
+                </div>
+              </div>
+            </li>
+          <% }); %>
+        <% } %>
+      </ul>
+    <% } %>
+  </div>
+    
+</main>
+<%- include('./components/bottom') %>

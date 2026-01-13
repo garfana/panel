@@ -1,0 +1,176 @@
+<%- include('./components/top') %>
+
+<main class="flex-grow container mx-auto px-4 py-8">
+    <div class="justify-center w-full mx-auto">
+        <div class="flex">
+            <nav aria-label="Breadcrumb" class="border border-white/15 w-64 mb-5 inline-flex py-1.5 px-3.5 rounded-full bg-white/5 shadow">
+                <ol role="list" class="flex items-center space-x-2">
+                    <li>
+                        <a href="#_" class="text-sm flex items-center gap-2 text-zinc-400 duration-200 hover:text-zinc-300" aria-current="false">
+                            <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler size-5 icons-tabler-outline icon-tabler-home">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                <path d="M5 12l-2 0l9 -9l9 9l-2 0"></path>
+                                <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"></path>
+                                <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"></path>
+                            </svg>
+                            <span>Home</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-slash size-4">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                <path d="M17 5l-10 14"></path>
+                            </svg>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#_" class="text-sm flex items-center gap-2 font-medium text-white/80 duration-200" aria-current="false">
+                            Staking
+                        </a>
+                    </li>
+                </ol>
+            </nav>
+            <span class="text-gray-600 text-md ml-5 mt-1">•</span>
+            <h1 class="text-2xl font-semibold mt-0.5 ml-5 mb-0.5" style="font-family: 'Space Grotesk';">Welcome back, <%= req.session.userinfo.username %>.</h1> 
+        </div>
+    </div>
+
+    <div class="mt-8">
+        <!-- Staking Information -->
+        <div class="bg-white/5 border border-white/10 rounded-lg overflow-hidden mb-8">
+            <div class="px-6 sm:p-10 sm:pb-6">
+                <div class="flex items-center justify-between flex-wrap sm:flex-nowrap mb-4">
+                    <div>
+                        <h2 class="text-xl font-medium text-white sm:text-xl">Staking</h2>
+                    </div>
+                    <div class="mt-5 sm:mt-0 sm:ml-6">
+                        <p class="text-xl font-medium text-gray-400" id="staking-balance">Loading...</p>
+                    </div>
+                </div>
+                <div id="staking-details" class="mt-5 mb-5 text-md text-gray-200">
+                    <!-- Staking details will be populated here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Staking Actions -->
+        <div class="bg-white/5 border border-white/10 rounded-lg overflow-hidden mb-8">
+            <div class="px-6 sm:p-10">
+                <h2 class="text-xl font-medium text-white sm:text-xl mb-6">Staking Actions</h2>
+                
+                <!-- Stake Form -->
+                <form id="stake-form" class="mb-6">
+                    <div class="flex items-center">
+                        <input type="number" id="stake-amount" placeholder="Amount to stake" min="10" step="0.01" required
+                               class="flex-grow transition ease-in-out delay-100 shadow-sm block w-full sm:text-sm border-white/10 py-2 rounded-md bg-white/5 text-white focus:ring-orange-500 focus:border-orange-500">
+                        <button type="submit" class="ml-3 px-4 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500">
+                            Stake
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Unstake Form -->
+                <form id="unstake-form" class="mb-6">
+                    <div class="flex items-center">
+                        <input type="number" id="unstake-amount" placeholder="Amount to unstake" min="0" step="0.01" required
+                               class="flex-grow transition ease-in-out delay-100 shadow-sm block w-full sm:text-sm border-white/10 rounded-md bg-white/5 text-white focus:ring-orange-500 focus:border-orange-500">
+                        <button type="submit" class="ml-3 px-4 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500">
+                            Unstake
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Claim Rewards Button -->
+                <button id="claim-rewards" class="w-full px-4 py-2 bg-gray-600 text-white rounded-full font-medium hover:bg-gray-700 transition focus:outline-none focus:ring-2 focus:ring-green-500">
+                    Claim All Staking Rewards
+                </button>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script>
+  async function fetchStakingInfo() {
+    try {
+      const response = await fetch('/stake/balance');
+      const data = await response.json();
+
+      if (data) {
+        document.getElementById('staking-balance').textContent = `${data.staked.toFixed(2)} BrimCoins Staked`;
+        const details = `
+          <p>Total Earnings: ${data.earnings.toFixed(2)} BrimCoins</p>
+          <p>Current APY: 5%</p>
+          <p>Last Stake Time: ${new Date(data.lastStakeTime).toLocaleString()}</p>
+        `;
+        document.getElementById('staking-details').innerHTML = details;
+      } else {
+        document.getElementById('staking-balance').textContent = 'Error fetching staking info';
+      }
+    } catch (error) {
+      document.getElementById('staking-balance').textContent = 'Error fetching staking info';
+    }
+  }
+
+  async function handleStake(event) {
+    event.preventDefault();
+    const amount = document.getElementById('stake-amount').value;
+    try {
+      const response = await fetch('/stake', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ amount: parseFloat(amount) })
+      });
+      const data = await response.json();
+      if (response.ok) {
+        alert(`Successfully staked ${amount} BrimCoins`);
+        fetchStakingInfo();
+      } else {
+        alert(`Error: ${data.error}`);
+      }
+    } catch (error) {
+      alert('An error occurred while staking');
+    }
+  }
+
+  async function handleUnstake(event) {
+    event.preventDefault();
+    const amount = document.getElementById('unstake-amount').value;
+    try {
+      const response = await fetch('/unstake', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ amount: parseFloat(amount) })
+      });
+      const data = await response.json();
+      if (response.ok) {
+        alert(`Successfully unstaked ${amount} BrimCoins. Earnings: ${data.earnings.toFixed(2)} BrimCoins`);
+        fetchStakingInfo();
+      } else {
+        alert(`Error: ${data.error}`);
+      }
+    } catch (error) {
+      alert('An error occurred while unstaking');
+    }
+  }
+
+  async function handleClaimRewards() {
+    try {
+      const response = await fetch('/stake/claim', { method: 'POST' });
+      const data = await response.json();
+      if (response.ok) {
+        alert(`Successfully claimed ${data.claimedAmount.toFixed(2)} BrimCoins in rewards`);
+        fetchStakingInfo();
+      } else {
+        alert(`Error: ${data.error}`);
+      }
+    } catch (error) {
+      alert('An error occurred while claiming rewards');
+    }
+  }
+
+  document.getElementById('stake-form').addEventListener('submit', handleStake);
+  document.getElementById('unstake-form').addEventListener('submit', handleUnstake);
+  document.getElementById('claim-rewards').addEventListener('click', handleClaimRewards);
+
+  fetchStakingInfo();
+  setInterval(fetchStakingInfo, 60000); // Refresh every minute
+</script>
+
+<%- include('./components/bottom') %>

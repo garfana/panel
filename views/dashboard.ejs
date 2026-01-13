@@ -1,0 +1,98 @@
+<%- include('./components/top') %>
+<!-- Main Content -->
+<main class="flex-grow container mx-auto px-4 py-8">
+    <div class="justify-center w-full mx-auto">
+        <div class="flex">
+        <nav aria-label="Breadcrumb" class="border border-white/15 w-64 mb-5 inline-flex py-1.5 px-3.5 rounded-full bg-white/5 shadow">
+            <ol role="list" class="flex items-center space-x-2">
+                <li>
+                    <a href="#_" class="text-sm flex items-center gap-2 text-zinc-400 duration-200 hover:text-zinc-300" aria-current="false">
+                        <svg
+                            aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            class="icon icon-tabler size-5 icons-tabler-outline icon-tabler-home"
+                        >
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                            <path d="M5 12l-2 0l9 -9l9 9l-2 0"></path>
+                            <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"></path>
+                            <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"></path>
+                        </svg>
+                        <span>Home</span>
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            class="icon icon-tabler icons-tabler-outline icon-tabler-slash size-4"
+                        >
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                            <path d="M17 5l-10 14"></path>
+                        </svg>
+                    </a>
+                </li>
+                <li>
+                    <a href="#_" class="text-sm flex items-center gap-2 font-medium text-white/80 duration-200" aria-current="false">
+                        Dashboard
+                    </a>
+                </li>
+            </ol>
+        </nav>
+      <span class="text-gray-600 text-md ml-5 mt-1">•</span>
+      <h1 class="text-2xl font-semibold mt-0.5 ml-5 mb-0.5" style="font-family: 'Space Grotesk';">Welcome back, <%= req.session.userinfo.username %>.</h1> 
+      </div>
+    </div>
+
+    <!-- Content -->
+    <%
+    let ram = 0;
+    let disk = 0;
+    let cpu = 0;
+    let servers = pterodactyl.relationships.servers.data.length;
+    for (let i = 0, len = pterodactyl.relationships.servers.data.length; i < len; i++) {
+       ram = ram + (typeof pterodactyl.relationships.servers.data[i].attributes.limits.memory == "number" ? pterodactyl.relationships.servers.data[i].attributes.limits.memory : 0);
+       disk = disk + (typeof pterodactyl.relationships.servers.data[i].attributes.limits.disk == "number" ? pterodactyl.relationships.servers.data[i].attributes.limits.disk : 0);
+       cpu = cpu + (typeof pterodactyl.relationships.servers.data[i].attributes.limits.cpu == "number" ? pterodactyl.relationships.servers.data[i].attributes.limits.cpu : 0);
+    }
+    %>
+    <div>
+      <dl class="mt-4 grid grid-cols-1 divide-y divide-white/5 overflow-hidden rounded-lg bg-white/5 border border-white/10 shadow md:grid-cols-3 md:divide-y-0 md:divide-x">
+        <div class="px-4 py-5 sm:p-6">
+          <dt class="text-base font-medium text-white">Available RAM</dt>
+          <dd class="mt-1 flex items-baseline justify-between md:block lg:flex">
+            <div class="flex items-baseline text-2xl font-semibold text-orange-500">
+              <%= packages.ram/1024 + extraresources.ram/1024 - ram/1024 %> GiB
+            </div>
+          </dd>
+        </div>
+    
+        <div class="px-4 py-5 sm:p-6">
+          <dt class="text-base font-medium text-white">Available CPU</dt>
+          <dd class="mt-1 flex items-baseline justify-between md:block lg:flex">
+            <div class="flex items-baseline text-2xl font-semibold text-orange-500">
+              <%= packages.cpu/100 + extraresources.cpu/100 - cpu/100 %> CPU core(s)
+            </div>
+          </dd>
+        </div>
+    
+        <div class="px-4 py-5 sm:p-6">
+          <dt class="text-base font-medium text-white">Available disk</dt>
+          <dd class="mt-1 flex items-baseline justify-between md:block lg:flex">
+            <div class="flex items-baseline text-2xl font-semibold text-orange-500">
+              <%= packages.disk/1024 + extraresources.disk/1024 - disk/1024 %> GiB
+            </div>
+          </dd>
+        </div>
+      </dl>
+    </div>
+    
+</main>
+<%- include('./components/bottom') %>

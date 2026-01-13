@@ -1,0 +1,391 @@
+<%- include('./components/top') %>
+<!-- Main Content -->
+<main class="flex-grow container mx-auto px-4 py-8" x-data="store()">
+    <div class="justify-center w-full mx-auto">
+        <div class="flex">
+            <nav aria-label="Breadcrumb" class="border border-white/15 w-64 mb-5 inline-flex py-1.5 px-3.5 rounded-full bg-white/5 shadow">
+                <ol role="list" class="flex items-center space-x-2">
+                    <li>
+                        <a href="#_" class="text-sm flex items-center gap-2 text-zinc-400 duration-200 hover:text-zinc-300" aria-current="false">
+                            <svg
+                                aria-hidden="true"
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                class="icon icon-tabler size-5 icons-tabler-outline icon-tabler-home"
+                            >
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                <path d="M5 12l-2 0l9 -9l9 9l-2 0"></path>
+                                <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"></path>
+                                <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"></path>
+                            </svg>
+                            <span>Home</span>
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                class="icon icon-tabler icons-tabler-outline icon-tabler-slash size-4"
+                            >
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                <path d="M17 5l-10 14"></path>
+                            </svg>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#_" class="text-sm flex items-center gap-2 font-medium text-white/80 duration-200" aria-current="false">
+                            Store
+                        </a>
+                    </li>
+                </ol>
+            </nav>
+            <span class="text-gray-600 text-md ml-5 mt-1">•</span>
+            <h1 class="text-2xl font-semibold mt-0.5 ml-5 mb-0.5" style="font-family: 'Space Grotesk';">Welcome back, <%= req.session.userinfo.username %>.</h1> 
+        </div>
+    </div>
+
+    <!-- Store Content -->
+    <div class="mt-12">
+        <!-- Coin Purchasing Section -->
+        <% if (settings.api?.client?.coins?.stripe?.enabled) { %>
+        <div class="mb-16">
+            <h2 class="text-3xl font-bold mb-8 text-center">Purchase BrimCoins</h2>
+            <div class="max-w-md mx-auto">
+                <div class="bg-white/5 border border-white/10 rounded-lg p-8 shadow-lg">
+                    <h3 class="text-2xl font-semibold mb-6 text-center">Buy BrimCoins</h3>
+                    <div class="space-y-6">
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Amount (USD)</label>
+                            <div class="relative">
+                                <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">$</span>
+                                <input 
+                                    type="number" 
+                                    id="coin-amount" 
+                                    min="5" 
+                                    max="500" 
+                                    step="1" 
+                                    value="10"
+                                    class="w-full pl-8 pr-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                                    oninput="updateCoinPreview()"
+                                >
+                            </div>
+                            <p class="text-xs text-gray-400 mt-1">Minimum: $5 | Maximum: $500</p>
+                        </div>
+                        
+                        <div class="text-center py-4 bg-white/5 rounded-lg">
+                            <div class="text-lg font-medium">You will receive:</div>
+                            <div id="coin-preview" class="text-3xl font-bold text-orange-500 mt-2">1000 BrimCoins</div>
+                            <div class="text-sm text-gray-400 mt-1">Rate: 100 coins per $1</div>
+                        </div>
+                        
+                        <button 
+                            onclick="purchaseCoins()" 
+                            id="purchase-btn"
+                            class="w-full bg-orange-600 font-medium text-white py-3 rounded-lg hover:bg-orange-700 transition flex items-center justify-center"
+                        >
+                            <span id="btn-text">Purchase Now</span>
+                            <div id="loading-spinner" class="hidden ml-2">
+                                <svg class="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                </svg>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <% } %>
+
+        <!-- Resource Purchasing Section -->
+        <div>
+            <h2 class="text-3xl font-bold mb-8 text-center">Purchase Resources</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- RAM Card -->
+            <div class="bg-white/5 border border-white/10 rounded-lg p-6 shadow-lg">
+                <h3 class="text-xl font-semibold mb-4">RAM</h3>
+                <p class="text-gray-400 mb-4">Upgrade your server's memory</p>
+                <div class="mb-4">
+                    <div class="text-lg font-medium mb-2">300 BrimCoins - 0 / GB</div>
+                    <div class="flex items-center justify-center">
+                        <button @click="decrementRAM" class="bg-white/5 hover:bg-white/10 text-white px-3 py-1 rounded-l flex items-center justify-center w-10 h-8">-</button>
+                        <input x-model="ram" type="number" min="0" class="bg-[#1a1f2a]/50 text-white w-16 text-center px-2 py-1 border-t border-b border-white/5 h-8">
+                        <button @click="incrementRAM" class="bg-white/5 hover:bg-white/10 text-white px-3 py-1 rounded-r flex items-center justify-center w-10 h-8">+</button>
+                    </div>
+                </div>
+                <button @click="buyRAM" class="w-full bg-orange-600 font-medium text-white py-2 rounded-full hover:bg-orange-700 transition">
+                    Buy RAM
+                </button>
+            </div>
+
+            <!-- Disk Card -->
+            <div class="bg-white/5 border border-white/10 rounded-lg p-6 shadow-lg">
+                <h3 class="text-xl font-semibold mb-4">Disk</h3>
+                <p class="text-gray-400 mb-4">Expand your storage capacity</p>
+                <div class="mb-4">
+                    <div class="text-lg font-medium mb-2">200 BrimCoins - 0 / 5GB</div>
+                    <div class="flex items-center justify-center">
+                        <button @click="decrementDisk" class="bg-white/5 hover:bg-white/10 text-white px-3 py-1 rounded-l flex items-center justify-center w-10 h-8">-</button>
+                        <input x-model="disk" type="number" min="0" class="bg-[#1a1f2a]/50 text-white w-16 text-center px-2 py-1 border-t border-b border-white/5 h-8">
+                        <button @click="incrementDisk" class="bg-white/5 hover:bg-white/10 text-white px-3 py-1 rounded-r flex items-center justify-center w-10 h-8">+</button>
+                    </div>
+                </div>
+                <button @click="buyDisk" class="w-full bg-orange-600 font-medium text-white py-2 rounded-full hover:bg-orange-700 transition">
+                    Buy Disk
+                </button>
+            </div>
+
+            <!-- CPU Card -->
+            <div class="bg-white/5 border border-white/10 rounded-lg p-6 shadow-lg">
+                <h3 class="text-xl font-semibold mb-4">CPU</h3>
+                <p class="text-gray-400 mb-4">Boost your processing power</p>
+                <div class="mb-4">
+                    <div class="text-lg font-medium mb-2">350 BrimCoins - 0 / Core</div>
+                    <div class="flex items-center justify-center">
+                        <button @click="decrementCPU" class="bg-white/5 hover:bg-white/10 text-white px-3 py-1 rounded-l flex items-center justify-center w-10 h-8">-</button>
+                        <input x-model="cpu" type="number" min="0" class="bg-[#1a1f2a]/50 text-white w-16 text-center px-2 py-1 border-t border-b border-white/5 h-8">
+                        <button @click="incrementCPU" class="bg-white/5 hover:bg-white/10 text-white px-3 py-1 rounded-r flex items-center justify-center w-10 h-8">+</button>
+                    </div>
+                </div>
+                <button @click="buyCPU" class="w-full bg-orange-600 font-medium text-white py-2 rounded-full hover:bg-orange-700 transition">
+                    Buy CPU
+                </button>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Stripe Modal -->
+<div id="stripe-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
+    <div class="bg-[#1a1f2a] rounded-lg p-8 max-w-md w-full mx-4 border border-white/10">
+        <div class="flex justify-between items-center mb-6">
+            <h3 id="modal-title" class="text-xl font-semibold">Purchase Coins</h3>
+            <button onclick="closeStripeModal()" class="text-gray-400 hover:text-white">✕</button>
+        </div>
+        <div id="modal-content">
+            <div id="payment-form"></div>
+        </div>
+        <div id="payment-messages" class="mt-4 text-center"></div>
+    </div>
+</div>
+
+<script src="https://js.stripe.com/v3/"></script>
+<script>
+function store() {
+    return {
+        ram: 0,
+        disk: 0,
+        cpu: 0,
+        incrementRAM() { this.ram++ },
+        decrementRAM() { if (this.ram > 0) this.ram-- },
+        incrementDisk() { this.disk++ },
+        decrementDisk() { if (this.disk > 0) this.disk-- },
+        incrementCPU() { this.cpu++ },
+        decrementCPU() { if (this.cpu > 0) this.cpu-- },
+        buyRAM() {
+            if (this.ram > 0) {
+                window.location.href = `/buyram?amount=${this.ram}`;
+            }
+        },
+        buyDisk() {
+            if (this.disk > 0) {
+                window.location.href = `/buydisk?amount=${this.disk * 5}`;
+            }
+        },
+        buyCPU() {
+            if (this.cpu > 0) {
+                window.location.href = `/buycpu?amount=${this.cpu}`;
+            }
+        }
+    }
+}
+
+// Stripe coin purchasing functionality
+let stripe = null;
+let elements = null;
+
+// Initialize Stripe (will work when keys are added)
+if (typeof Stripe !== 'undefined') {
+    try {
+        const publicKey = '<%= settings.api?.client?.coins?.stripe?.public_key || "" %>';
+        if (publicKey && publicKey !== 'pk_test_YOUR_STRIPE_PUBLIC_KEY_HERE') {
+            stripe = Stripe(publicKey);
+        }
+    } catch (e) {
+        console.log('Stripe public key not configured yet');
+    }
+}
+
+// Update coin preview based on amount
+function updateCoinPreview() {
+    const amount = document.getElementById('coin-amount').value;
+    const coins = amount * 100; // 100 coins per $1
+    document.getElementById('coin-preview').textContent = `${coins.toLocaleString()} BrimCoins`;
+}
+
+// Play success sound
+function playSuccessSound() {
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    const oscillator = audioContext.createOscillator();
+    const gainNode = audioContext.createGain();
+    
+    oscillator.connect(gainNode);
+    gainNode.connect(audioContext.destination);
+    
+    oscillator.frequency.setValueAtTime(523.25, audioContext.currentTime); // C5
+    oscillator.frequency.setValueAtTime(659.25, audioContext.currentTime + 0.1); // E5
+    oscillator.frequency.setValueAtTime(783.99, audioContext.currentTime + 0.2); // G5
+    
+    gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+    
+    oscillator.start();
+    oscillator.stop(audioContext.currentTime + 0.5);
+}
+
+// Set loading state
+function setLoadingState(loading) {
+    const btn = document.getElementById('purchase-btn');
+    const btnText = document.getElementById('btn-text');
+    const spinner = document.getElementById('loading-spinner');
+    
+    if (loading) {
+        btn.disabled = true;
+        btnText.textContent = 'Processing...';
+        spinner.classList.remove('hidden');
+    } else {
+        btn.disabled = false;
+        btnText.textContent = 'Purchase Now';
+        spinner.classList.add('hidden');
+    }
+}
+
+async function purchaseCoins() {
+    if (!stripe) {
+        alert('Stripe configuration is required to purchase coins. Please contact an administrator to set up Stripe API keys.');
+        return;
+    }
+    
+    const amount = parseFloat(document.getElementById('coin-amount').value);
+    if (amount < 5 || amount > 500) {
+        alert('Amount must be between $5 and $500');
+        return;
+    }
+    
+    setLoadingState(true);
+    
+    try {
+        // Create payment intent with custom amount
+        const response = await fetch('/api/create-payment-intent', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ 
+                amount: amount,
+                coins: amount * 100 // 100 coins per $1
+            })
+        });
+        
+        const data = await response.json();
+        
+        if (!response.ok) {
+            throw new Error(data.error || 'Payment setup failed');
+        }
+        
+        setLoadingState(false);
+        
+        // Show modal and create payment elements
+        document.getElementById('stripe-modal').classList.remove('hidden');
+        document.getElementById('modal-title').textContent = `Purchase ${(amount * 100).toLocaleString()} BrimCoins`;
+        
+        elements = stripe.elements({
+            clientSecret: data.clientSecret
+        });
+        
+        const paymentElement = elements.create('payment');
+        paymentElement.mount('#payment-form');
+        
+        // Setup payment form submission
+        setupPaymentForm(data.clientSecret);
+        
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Error setting up payment: ' + error.message);
+        setLoadingState(false);
+    }
+}
+
+function setupPaymentForm(clientSecret) {
+    const form = document.createElement('form');
+    form.innerHTML = `
+        <button type="submit" class="w-full bg-orange-600 font-medium text-white py-3 rounded-full hover:bg-orange-700 transition mt-4" id="submit-btn">
+            Complete Payment
+        </button>
+    `;
+    
+    form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        
+        const submitButton = document.getElementById('submit-btn');
+        submitButton.disabled = true;
+        submitButton.textContent = 'Processing...';
+        
+        const { error, paymentIntent } = await stripe.confirmPayment({
+            elements,
+            confirmParams: {
+                return_url: window.location.origin + '/store?payment=success',
+            },
+            redirect: 'if_required'
+        });
+        
+        if (error) {
+            document.getElementById('payment-messages').innerHTML = 
+                `<div class="text-red-400">${error.message}</div>`;
+            submitButton.disabled = false;
+            submitButton.textContent = 'Complete Payment';
+        } else if (paymentIntent.status === 'succeeded') {
+            // Confirm payment on backend
+            const confirmResponse = await fetch('/api/confirm-payment', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ paymentIntentId: paymentIntent.id })
+            });
+            
+            const confirmData = await confirmResponse.json();
+            
+            if (confirmData.success) {
+                playSuccessSound(); // Play success sound
+                document.getElementById('payment-messages').innerHTML = 
+                    `<div class="text-green-400">Payment successful! You received ${confirmData.coinsAdded} BrimCoins!</div>`;
+                setTimeout(() => {
+                    closeStripeModal();
+                    window.location.reload();
+                }, 2000);
+            } else {
+                document.getElementById('payment-messages').innerHTML = 
+                    `<div class="text-red-400">Payment verification failed</div>`;
+            }
+        }
+    });
+    
+    document.getElementById('payment-form').appendChild(form);
+}
+
+function closeStripeModal() {
+    document.getElementById('stripe-modal').classList.add('hidden');
+    document.getElementById('payment-form').innerHTML = '';
+    document.getElementById('payment-messages').innerHTML = '';
+}
+</script>
+
+<%- include('./components/bottom') %>

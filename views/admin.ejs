@@ -1,0 +1,259 @@
+<%- include('./components/top') %>
+<!-- Main Content -->
+<main class="flex-grow container mx-auto px-4 py-8">
+    <div class="justify-center w-full mx-auto">
+        <div class="flex">
+            <nav aria-label="Breadcrumb" class="border border-white/15 w-64 mb-5 inline-flex py-1.5 px-3.5 rounded-full bg-white/5 shadow">
+                <ol role="list" class="flex items-center space-x-2">
+                    <li>
+                        <a href="/" class="text-sm flex items-center gap-2 text-zinc-400 duration-200 hover:text-zinc-300" aria-current="false">
+                            <svg
+                                aria-hidden="true"
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                class="icon icon-tabler size-5 icons-tabler-outline icon-tabler-home"
+                            >
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                <path d="M5 12l-2 0l9 -9l9 9l-2 0"></path>
+                                <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"></path>
+                                <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"></path>
+                            </svg>
+                            <span>Home</span>
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                class="icon icon-tabler icons-tabler-outline icon-tabler-slash size-4"
+                            >
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                <path d="M17 5l-10 14"></path>
+                            </svg>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/admin" class="text-sm flex items-center gap-2 font-medium text-white/80 duration-200" aria-current="false">
+                            Admin Panel
+                        </a>
+                    </li>
+                </ol>
+            </nav>
+            <span class="text-gray-600 text-md ml-5 mt-1">•</span>
+            <h1 class="text-2xl font-semibold mt-0.5 ml-5 mb-0.5" style="font-family: 'Space Grotesk';">Administration Dashboard</h1> 
+        </div>
+    </div>
+
+    <!-- Admin Sections -->
+    <div class="mt-12 space-y-8">
+        
+        <!-- User Management Section -->
+        <div class="bg-white/5 border border-white/10 rounded-lg shadow overflow-hidden">
+            <div class="px-4 py-5 sm:px-6 border-b border-white/5">
+                <h3 class="text-lg font-semibold leading-6 text-white" style="font-family: 'Space Grotesk'">User Management</h3>
+                <p class="mt-1 text-sm text-gray-400">Manage user accounts, coins, and resources</p>
+            </div>
+            <div class="px-4 py-5 sm:p-6">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- Set Coins -->
+                    <div>
+                        <h4 class="text-md font-medium text-white mb-4">Set User Coins</h4>
+                        <form action="/setcoins" method="GET" class="space-y-3">
+                            <input type="text" name="id" required class="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm" placeholder="Discord User ID">
+                            <input type="number" name="coins" required min="0" class="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm" placeholder="Coin amount">
+                            <button type="submit" class="w-full bg-orange-600 text-white py-2 px-4 rounded-lg hover:bg-orange-700 transition text-sm">Set Coins</button>
+                        </form>
+                    </div>
+
+                    <!-- Add Coins -->
+                    <div>
+                        <h4 class="text-md font-medium text-white mb-4">Add User Coins</h4>
+                        <form action="/addcoins" method="GET" class="space-y-3">
+                            <input type="text" name="id" required class="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm" placeholder="Discord User ID">
+                            <input type="number" name="coins" required min="1" class="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm" placeholder="Coins to add">
+                            <button type="submit" class="w-full bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition text-sm">Add Coins</button>
+                        </form>
+                    </div>
+
+                    <!-- User Info -->
+                    <div>
+                        <h4 class="text-md font-medium text-white mb-4">Get User Information</h4>
+                        <form action="/userinfo" method="GET" class="space-y-3">
+                            <input type="text" name="id" required class="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm" placeholder="Discord User ID">
+                            <div class="pt-2"></div>
+                            <button type="submit" class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition text-sm">Get User Info</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Resource Management Section -->
+        <div class="bg-white/5 border border-white/10 rounded-lg shadow overflow-hidden">
+            <div class="px-4 py-5 sm:px-6 border-b border-white/5">
+                <h3 class="text-lg font-semibold leading-6 text-white" style="font-family: 'Space Grotesk'">Resource Management</h3>
+                <p class="mt-1 text-sm text-gray-400">Control user server resources and allocations</p>
+            </div>
+            <div class="px-4 py-5 sm:p-6">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- Set Resources -->
+                    <div>
+                        <h4 class="text-md font-medium text-white mb-4">Set User Resources</h4>
+                        <form action="/setresources" method="GET" class="space-y-4">
+                            <input type="text" name="id" required class="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm" placeholder="Discord User ID">
+                            <div class="grid grid-cols-2 gap-3">
+                                <input type="number" name="ram" min="0" class="px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm" placeholder="RAM (MB)">
+                                <input type="number" name="disk" min="0" class="px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm" placeholder="Disk (MB)">
+                                <input type="number" name="cpu" min="0" class="px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm" placeholder="CPU (%)">
+                                <input type="number" name="servers" min="0" class="px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm" placeholder="Servers">
+                            </div>
+                            <button type="submit" class="w-full bg-orange-600 text-white py-2 px-4 rounded-lg hover:bg-orange-700 transition text-sm">Set Resources</button>
+                        </form>
+                    </div>
+
+                    <!-- Add Resources -->
+                    <div>
+                        <h4 class="text-md font-medium text-white mb-4">Add User Resources</h4>
+                        <form action="/addresources" method="GET" class="space-y-4">
+                            <input type="text" name="id" required class="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm" placeholder="Discord User ID">
+                            <div class="grid grid-cols-2 gap-3">
+                                <input type="number" name="ram" min="0" class="px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm" placeholder="RAM to add">
+                                <input type="number" name="disk" min="0" class="px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm" placeholder="Disk to add">
+                                <input type="number" name="cpu" min="0" class="px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm" placeholder="CPU % to add">
+                                <input type="number" name="servers" min="0" class="px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm" placeholder="Servers to add">
+                            </div>
+                            <button type="submit" class="w-full bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition text-sm">Add Resources</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Economy Management Section -->
+        <div class="bg-white/5 border border-white/10 rounded-lg shadow overflow-hidden">
+            <div class="px-4 py-5 sm:px-6 border-b border-white/5">
+                <h3 class="text-lg font-semibold leading-6 text-white" style="font-family: 'Space Grotesk'">Economy Management</h3>
+                <p class="mt-1 text-sm text-gray-400">Manage coupons and promotional codes</p>
+            </div>
+            <div class="px-4 py-5 sm:p-6">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- Create Coupon -->
+                    <div>
+                        <h4 class="text-md font-medium text-white mb-4">Create Coupon</h4>
+                        <form action="/create_coupon" method="GET" class="space-y-4">
+                            <input type="text" name="code" required class="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm" placeholder="Coupon code">
+                            <input type="number" name="coins" required min="1" class="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm" placeholder="Coin value">
+                            <button type="submit" class="w-full bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition text-sm">Create Coupon</button>
+                        </form>
+                    </div>
+                    
+                    <!-- Revoke Coupon -->
+                    <div>
+                        <h4 class="text-md font-medium text-white mb-4">Revoke Coupon</h4>
+                        <form action="/revoke_coupon" method="GET" class="space-y-4">
+                            <input type="text" name="code" required class="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm" placeholder="Coupon code to revoke">
+                            <div class="pt-6"></div>
+                            <button type="submit" class="w-full bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700 transition text-sm">Revoke Coupon</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- System Administration Section -->
+        <div class="bg-white/5 border border-white/10 rounded-lg shadow overflow-hidden">
+            <div class="px-4 py-5 sm:px-6 border-b border-white/5">
+                <h3 class="text-lg font-semibold leading-6 text-white" style="font-family: 'Space Grotesk'">System Administration</h3>
+                <p class="mt-1 text-sm text-gray-400">Advanced system operations and user management</p>
+            </div>
+            <div class="px-4 py-5 sm:p-6">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- Set Plan -->
+                    <div>
+                        <h4 class="text-md font-medium text-white mb-4">Set User Plan</h4>
+                        <form action="/setplan" method="GET" class="space-y-3">
+                            <input type="text" name="id" required class="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm" placeholder="Discord User ID">
+                            <input type="text" name="package" class="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm" placeholder="Package name (optional)">
+                            <button type="submit" class="w-full bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition text-sm">Set Plan</button>
+                        </form>
+                    </div>
+
+                    <!-- Get User IP -->
+                    <div>
+                        <h4 class="text-md font-medium text-white mb-4">Get User IP</h4>
+                        <form action="/getip" method="GET" class="space-y-3">
+                            <input type="text" name="id" required class="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm" placeholder="Discord User ID">
+                            <div class="pt-2"></div>
+                            <button type="submit" class="w-full bg-cyan-600 text-white py-2 px-4 rounded-lg hover:bg-cyan-700 transition text-sm">Get IP Address</button>
+                        </form>
+                    </div>
+
+                    <!-- Remove Account (Dangerous) -->
+                    <div class="bg-red-900/20 border border-red-500/20 rounded-lg p-4">
+                        <h4 class="text-md font-medium text-red-300 mb-4">⚠️ Remove Account</h4>
+                        <p class="text-xs text-red-200 mb-3">This permanently deletes all user data!</p>
+                        <form action="/remove_account" method="GET" class="space-y-3" onsubmit="return confirm('Are you ABSOLUTELY sure you want to remove this account? This action cannot be undone!')">
+                            <input type="text" name="id" required class="w-full px-3 py-2 bg-red-900/20 border border-red-500/40 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500 text-sm" placeholder="Discord User ID">
+                            <button type="submit" class="w-full bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700 transition text-sm">⚠️ DELETE ACCOUNT</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- System Statistics Section -->
+        <div class="bg-white/5 border border-white/10 rounded-lg shadow overflow-hidden">
+            <div class="px-4 py-5 sm:px-6 border-b border-white/5">
+                <h3 class="text-lg font-semibold leading-6 text-white" style="font-family: 'Space Grotesk'">System Statistics</h3>
+                <p class="mt-1 text-sm text-gray-400">Overview of platform usage and metrics</p>
+            </div>
+            <div class="px-4 py-5 sm:p-6">
+                <dl class="grid grid-cols-1 divide-y divide-white/5 overflow-hidden rounded-lg bg-white/10 border border-white/20 md:grid-cols-3 md:divide-y-0 md:divide-x">
+                    <div class="px-4 py-5 text-center">
+                        <dt class="text-base font-medium text-white">Total Users</dt>
+                        <dd class="mt-1 text-3xl font-bold text-orange-500" id="userCount">Loading...</dd>
+                    </div>
+                    <div class="px-4 py-5 text-center">
+                        <dt class="text-base font-medium text-white">Total Servers</dt>
+                        <dd class="mt-1 text-3xl font-bold text-green-500" id="serverCount">Loading...</dd>
+                    </div>
+                    <div class="px-4 py-5 text-center">
+                        <dt class="text-base font-medium text-white">Total Nodes</dt>
+                        <dd class="mt-1 text-3xl font-bold text-blue-500" id="nodeCount">Loading...</dd>
+                    </div>
+                </dl>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script>
+// Load system statistics
+async function loadStats() {
+    try {
+        const response = await fetch('/stats');
+        const stats = await response.json();
+        
+        document.getElementById('userCount').textContent = stats.users || 0;
+        document.getElementById('serverCount').textContent = stats.servers || 0;
+        document.getElementById('nodeCount').textContent = stats.nodes || 0;
+    } catch (error) {
+        console.error('Failed to load stats:', error);
+        document.getElementById('userCount').textContent = 'Error';
+        document.getElementById('serverCount').textContent = 'Error';
+        document.getElementById('nodeCount').textContent = 'Error';
+    }
+}
+
+// Load stats when page loads
+document.addEventListener('DOMContentLoaded', loadStats);
+</script>
+
+<%- include('./components/bottom') %>

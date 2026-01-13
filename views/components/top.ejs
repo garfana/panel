@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/nanobar/0.4.2/nanobar.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= settings.name %></title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>[x-cloak] { display: none; }</style>
+</head>
+<body style="font-family: 'Space Grotesk'" class="bg-[#0a0a0a] text-white">
+    <div class="min-h-screen flex flex-col">
+        <!-- Header/Navbar -->
+        <header class="bg-[#000000] border-b border-white/10">
+            <div class="container mx-auto px-4">
+                <!-- Top part of header -->
+                <div class="flex items-center justify-between h-16">
+                    <!-- Logo and Project Name -->
+                    <div class="flex items-center">
+                        <img src="/assets/logo.png" alt="Logo" class="w-8 h-8 mr-3">
+                        <span class="text-white/30 hidden sm:block">
+                        <svg class="geist-hide-on-mobile" data-testid="geist-icon" fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24" style="color:var(--accents-2);width:22px;height:22px"><path d="M16.88 3.549L7.12 20.451"></path></svg></span>
+                        <span style="font-family: 'Space Grotesk'" class="text-white ml-2 font-medium hidden sm:block"><%= req.session.userinfo.global_name %></span>
+                    </div>
+                    
+                    <!-- User Info -->
+                    <div class="flex items-center space-x-2 sm:space-x-4">
+                        <span class="mt-0.5 font-medium bg-white/10 shadow rounded-full border border-white/5 text-gray-300 px-2 sm:px-3 py-1 text-xs">
+                            <span class="hidden sm:inline"><%= coins ? coins.toFixed(2) : '0.00' %> Coins</span>
+                            <span class="sm:hidden flex items-center gap-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-coins w-3 h-3 text-yellow-400">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                    <path d="M9 14c0 1.657 2.686 3 6 3s6 -1.343 6 -3s-2.686 -3 -6 -3s-6 1.343 -6 3z" />
+                                    <path d="M9 14v4c0 1.656 2.686 3 6 3s6 -1.344 6 -3v-4" />
+                                    <path d="M3 6c0 1.072 1.144 2.062 3 2.598s4.144 .536 6 0c1.856 -.536 3 -1.526 3 -2.598c0 -1.072 -1.144 -2.062 -3 -2.598s-4.144 -.536 -6 0c-1.856 .536 -3 1.526 -3 2.598z" />
+                                    <path d="M3 6v10c0 .888 .772 1.45 2 2" />
+                                    <path d="M3 11c0 .888 .772 1.45 2 2" />
+                                </svg>
+                                <%= coins ? coins.toFixed(0) : '0' %>
+                            </span>
+                        </span>
+                        <div class="relative group">
+                            <div x-data="{ open: false }" class="relative">
+                                <button @click="open = !open" @click.away="open = false" class="flex items-center space-x-1 sm:space-x-2 hover:scale-95 transition hover:bg-white/5 p-1 px-2 sm:px-4 border border-transparent hover:border-white/10 cursor-pointer rounded-lg focus:outline-none">
+                                    <span class="text-sm font-medium hidden sm:block"><%= req.session.userinfo.username %></span>
+                                    <img src="https://cdn.discordapp.com/avatars/<%= req.session.userinfo.id%>/<%= req.session.userinfo.avatar%>.jpg?size=1024" alt="User Avatar" class="w-8 h-8 rounded-full">
+                                    <svg :class="{'rotate-180': open}" class="ml-1 h-4 w-4 transition-transform duration-200 hidden sm:block" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                    </svg>
+                                </button>
+                                <!-- Full-screen blur overlay (mobile only) -->
+                                <div x-show="open" x-cloak class="md:hidden fixed inset-0 z-40 bg-black/40 backdrop-blur-sm" x-transition.opacity @click="open=false"></div>
+                                <!-- Dropdown menu -->
+                                <div x-show="open" 
+                                     x-transition:enter="transition ease-out duration-100" 
+                                     x-transition:enter-start="transform opacity-0 scale-95" 
+                                     x-transition:enter-end="transform opacity-100 scale-100" 
+                                     x-transition:leave="transition ease-in duration-75" 
+                                     x-transition:leave-start="transform opacity-100 scale-100" 
+                                     x-transition:leave-end="transform opacity-0 scale-95" 
+                                     class="absolute right-0 mt-2 w-48 z-50 rounded-md shadow-xl bg-[#1a1f2a] ring-1 ring-white/10 border border-white/5">
+                                    <div class="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
+                                        <a href="/account" class="block px-4 py-2 text-sm text-gray-300 hover:bg-white/5 hover:text-white" role="menuitem">Panel Access</a>
+                                        <a href="/redeem" class="block px-4 py-2 text-sm text-gray-300 hover:bg-white/5 hover:text-white" role="menuitem">Redeem Coupon</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Bottom tabs -->
+            <div class="container mx-auto px-4">
+                <div class="flex space-x-4" id="tabs">
+                    <a href="/dashboard" class="text-sm py-2 px-4 transition duration-200 border-b-2 border-transparent text-gray-300 hover:text-white hover:font-medium hover:border-orange-500" data-tab="overview">Dashboard</a>
+                    <a href="/servers" class="text-sm py-2 px-4 transition duration-200 border-b-2 border-transparent text-gray-300 hover:text-white hover:font-medium hover:border-orange-500" data-tab="overview">Servers</a>
+                    <div class="relative group">
+                        <div x-data="{ open: false }" class="relative">
+                            <button @click="open = !open" @click.away="open = false" class="text-sm py-2 px-4 transition duration-200 border-b-2 border-transparent text-gray-300 hover:text-white hover:font-medium hover:border-orange-500 focus:outline-none flex items-center">
+                                Economy
+                                <svg :class="{'rotate-180': open}" class="ml-2 h-4 w-4 transition-transform duration-200" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                </svg>
+                            </button>
+                            <div x-show="open" 
+                                 x-transition:enter="transition ease-out duration-100" 
+                                 x-transition:enter-start="transform opacity-0 scale-95" 
+                                 x-transition:enter-end="transform opacity-100 scale-100" 
+                                 x-transition:leave="transition ease-in duration-75" 
+                                 x-transition:leave-start="transform opacity-100 scale-100" 
+                                 x-transition:leave-end="transform opacity-0 scale-95" 
+                                 class="absolute left-0 mt-2 w-48 rounded-md shadow-xl bg-[#1a1f2a] ring-1 ring-white/10 border border-white/5">
+                                <div class="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
+                                    <a href="/afk" class="block px-4 py-2 text-sm text-gray-300 hover:bg-white/5 hover:text-white" role="menuitem">AFK Page</a>
+                                    <a href="/store" class="block px-4 py-2 text-sm text-gray-300 hover:bg-white/5 hover:text-white" role="menuitem">Store</a>
+                                    <a href="/transactions" class="block px-4 py-2 text-sm text-gray-300 hover:bg-white/5 hover:text-white" role="menuitem">Transaction History</a>
+                                    <a href="/staking" class="block px-4 py-2 text-sm text-gray-300 hover:bg-white/5 hover:text-white" role="menuitem">Staking</a>
+                                    <a href="/referrals" class="block px-4 py-2 text-sm text-gray-300 hover:bg-white/5 hover:text-white" role="menuitem">Referrals</a>
+                                    <!--<a href="/transfer" class="block px-4 py-2 text-sm text-gray-300 hover:bg-white/5 hover:text-white" role="menuitem">Transfer</a>-->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>

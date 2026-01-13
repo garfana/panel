@@ -1,0 +1,392 @@
+# Name and timezone
+name = "Garfana"
+timezone = "Asia/Kathmandu"
+icon = "../assets/favicon.png"
+
+# Garfana release information
+platform_codename = "Antonio" 
+platform_level = 1 # 
+version = "0.8.0" # Dont change this
+
+# Additional settings
+testing = true
+clusters = 2
+database = "sqlite://garfana.db"
+
+# Pterodactyl settings
+[pterodactyl]
+domain = "https://panel.example.com"
+key = "xxxxxxx"
+
+# Webserver
+[website]
+port = 5000
+secret = "CHANGE_ME"
+disable_afk_page = false
+
+# Module settings (formerly API)
+[api.client]
+accountSwitcher = true
+
+  [api.client.api]
+  enabled = true
+  code = "ripw3fpusidfkshfgyjwefknjknsdkhfgsdhfjshefyjsdjfsgdfjsgeoflsdgfhj"
+
+ 
+  [api.client.bot]
+  token = ""
+
+    [api.client.bot.joinguild]
+    _comment = "The Discord bot must be in these servers and have invite permissions. Automatic guild joining will not work unless role packages are configured correctly. You can always just set it to a random role & package so that only this works."
+    enabled = false
+    guildid = [""]
+
+    [api.client.bot.giverole]
+    _comment = "Auto-join must be enabled for this to work - or the user must already be in your Discord. This will give the user a role when they login."
+    enabled = false
+    guildid = ""
+    roleid = ""
+
+  [api.client.passwordgenerator]
+  signup = true
+  note = "Use this to disable registering on Heliactyl."
+  length = 24
+
+  [api.client.allow]
+  newusers = true
+  regen = true
+  overresourcessuspend = false
+
+    [api.client.allow.server]
+    create = true
+    modify = true
+    delete = true
+
+  [api.client.oauth2]
+  _comment = "Go to https://discord.dev/ and create an application to set up OAuth2. This is required for Brimactyl to work. You must also set the redirect URL to the link below."
+  id = ""
+  secret = ""
+  link = ""
+  callbackpath = "/callback"
+  prompt = true
+
+    [api.client.oauth2.ip]
+    "trust x-forwarded-for" = true
+    block = [ ]
+    "duplicate check" = false
+    _note = "Anti-alt checks will not work if you are proxying through Cloudflare. This is due to the fact that Cloudflare does not pass the real IP address through the headers. If you are using Cloudflare, please disable this feature."
+
+  [api.client.ratelimits]
+  "/callback" = 2
+  "/create" = 1
+  "/delete" = 1
+  "/modify" = 1
+  "/updateinfo" = 1
+  "/setplan" = 2
+  "/admin" = 1
+  "/regen" = 1
+  "/renew" = 1
+  "/api/userinfo" = 1
+
+  [api.client.packages]
+  default = "default"
+
+# Packages
+[api.client.packages.list.default]
+ram = 2_048
+disk = 10_240
+cpu = 100
+servers = 4
+
+[api.client.packages.list.2]
+ram = 2_048
+disk = 10_240
+cpu = 100
+servers = 4
+
+    [api.client.packages.rolePackages]
+    note = "This allows you to set a different plan/package to people who have a specific role however this requires the Discord bot to be configured and functioning. This is mainly used for Boost rewards."
+    roleServer = "1268948646309920858"
+
+      [api.client.packages.rolePackages.roles]
+      "1271586303426826260" = "2"
+
+[api.client.locations.1]
+name = "Example Location"
+pro = false
+
+[api.client.locations.2]
+name = "fdfdf"
+pro = false
+
+[api.client.locations.3]
+name = "fdfdf2"
+pro = false
+
+[api.client.locations.4]
+name = "fdfdf3"
+pro = false
+
+[api.client.locations.5]
+name = "fdfdf3"
+pro = false
+
+[api.client.locations.6]
+name = "fdfdf3"
+pro = false
+
+[api.client.locations.7]
+name = "fdfdf3"
+pro = false
+
+[api.client.eggs.paper]
+display = "Minecraft - Paper"
+
+  [api.client.eggs.paper.minimum]
+  ram = 1_024
+  disk = 1_024
+  cpu = 100
+
+  [api.client.eggs.paper.maximum]
+
+  [api.client.eggs.paper.info]
+  egg = 16
+  docker_image = "ghcr.io/pterodactyl/yolks:java_21"
+  startup = "java -Xms128M -Xmx{{SERVER_MEMORY}}M -Dterminal.jline=false -Dterminal.ansi=true -jar {{SERVER_JARFILE}}"
+
+    [api.client.eggs.paper.info.environment]
+    SERVER_JARFILE = "server.jar"
+    BUILD_NUMBER = "latest"
+
+    [api.client.eggs.paper.info.feature_limits]
+    databases = 4
+    backups = 4
+
+
+[api.client.eggs.velocity]
+pro = false
+display = "Velocity"
+
+  [api.client.eggs.velocity.minimum]
+  ram = 512
+  disk = 128
+  cpu = 50
+
+  [api.client.eggs.velocity.maximum]
+
+  [api.client.eggs.velocity.info]
+  egg = 2
+  docker_image = "ghcr.io/zenllc/java:21"
+  startup = "java -Xms128M -Xmx{{SERVER_MEMORY}}M {{JAVA_ARGUMENTS}} -jar {{SERVER_JARFILE}}"
+
+    [api.client.eggs.velocity.info.environment]
+    SERVER_JARFILE = "server.jar"
+    VELOCITY_VERSION = "latest"
+    JAVA_ARGUMENTS = "-XX:+UseG1GC -XX:G1HeapRegionSize=4M -XX:+UnlockExperimentalVMOptions -XX:+ParallelRefProcEnabled -XX:+AlwaysPreTouch -XX:MaxInlineLevel=15"
+    BUILD_NUMBER = "latest"
+
+    [api.client.eggs.velocity.info.feature_limits]
+    databases = 4
+    backups = 4
+
+
+[api.client.eggs.vanillabugrock]
+pro = false
+display = "Vanilla Bedrock"
+
+  [api.client.eggs.vanillabugrock.minimum]
+  ram = 512
+  disk = 128
+  cpu = 50
+
+  [api.client.eggs.vanillabugrock.maximum]
+
+  [api.client.eggs.vanillabugrock.info]
+  egg = 17
+  docker_image = "ghcr.io/parkervcp/yolks:debian"
+  startup = "./bedrock_server"
+
+    [api.client.eggs.vanillabugrock.info.environment]
+    BEDROCK_VERSION = "latest"
+    LD_LIBRARY_PATH = "."
+    SERVERNAME = "Server"
+    GAMEMODE = "survival"
+    DIFFICULTY = "easy"
+    CHEATS = "false"
+
+    [api.client.eggs.vanillabugrock.info.feature_limits]
+    databases = 4
+    backups = 4
+
+[api.client.eggs.pmmpbugrock]
+pro = false
+display = "PocketMineMP"
+
+  [api.client.eggs.pmmpbugrock.minimum]
+  ram = 512
+  disk = 128
+  cpu = 50
+
+  [api.client.eggs.pmmpbugrock.maximum]
+
+  [api.client.eggs.pmmpbugrock.info]
+  egg = 18
+  docker_image = "ghcr.io/parkervcp/yolks:debian"
+  startup = "./bin/php7/bin/php ./PocketMine-MP.phar --no-wizard"
+
+    [api.client.eggs.pmmpbugrock.info.environment]
+    VERSION = "PM5"
+
+    [api.client.eggs.pmmpbugrock.info.feature_limits]
+    databases = 4
+    backups = 4
+
+[api.client.eggs.nodejs]
+pro = false
+display = "NodeJS"
+
+  [api.client.eggs.nodejs.minimum]
+  ram = 512
+  disk = 128
+  cpu = 50
+
+  [api.client.eggs.nodejs.maximum]
+
+  [api.client.eggs.nodejs.info]
+  egg = 16
+  docker_image = "ghcr.io/parkervcp/yolks:nodejs_20"
+  startup = 'if [[ -d .git ]] && [[ {{AUTO_UPDATE}} == "1" ]]; then git pull; fi; if [[ ! -z ${NODE_PACKAGES} ]]; then /usr/local/bin/npm install ${NODE_PACKAGES}; fi; if [[ ! -z ${UNNODE_PACKAGES} ]]; then /usr/local/bin/npm uninstall ${UNNODE_PACKAGES}; fi; if [ -f /home/container/package.json ]; then /usr/local/bin/npm install; fi; if [[ "${MAIN_FILE}" == "*.js" ]]; then /usr/local/bin/node "/home/container/${MAIN_FILE}" ${NODE_ARGS}; else /usr/local/bin/ts-node --esm "/home/container/${MAIN_FILE}" ${NODE_ARGS}; fi'
+
+    [api.client.eggs.nodejs.info.environment]
+    USER_UPLOAD = "0"
+    GIT_ADDRESS = ""
+    AUTO_UPDATE = "0"
+    MAIN_FILE = "index.js"
+    BRANCH = ""
+    NODE_PACKAGES = ""
+    USERNAME = ""
+    ACCESS_TOKEN = ""
+    UNNODE_PACKAGES = ""
+    NODE_ARGS = ""
+
+    [api.client.eggs.nodejs.info.feature_limits]
+    databases = 4
+    backups = 4
+
+[api.client.eggs.golang]
+pro = false
+display = "golang"
+
+  [api.client.eggs.golang.minimum]
+  ram = 512
+  disk = 128
+  cpu = 50
+
+  [api.client.eggs.golang.maximum]
+
+  [api.client.eggs.golang.info]
+  egg = 17
+  docker_image = "ghcr.io/parkervcp/yolks:debian"
+  startup = './${EXECUTABLE}'
+
+    [api.client.eggs.golang.info.environment]
+    GO_PACKAGE = "Example"
+    EXECUTABLE = "exe"
+
+    [api.client.eggs.golang.info.feature_limits]
+    databases = 4
+    backups = 4
+
+  [api.client.coins]
+  enabled = true
+
+    [api.client.coins.store]
+    enabled = true
+
+      [api.client.coins.store.ram]
+      cost = 300
+      per = 1_024
+
+      [api.client.coins.store.disk]
+      cost = 200
+      per = 5_120
+
+      [api.client.coins.store.cpu]
+      cost = 350
+      per = 100
+
+      [api.client.coins.store.servers]
+      cost = 100
+      per = 2
+
+    [api.client.coins.stripe]
+    enabled = true
+    public_key = ""
+    secret_key = ""
+    
+      [api.client.coins.stripe.packages]
+      
+        [api.client.coins.stripe.packages.small]
+        coins = 500
+        price = 5.00
+        name = "Small Coin Pack"
+        description = "500 Coins"
+        
+        [api.client.coins.stripe.packages.medium]
+        coins = 1200
+        price = 10.00
+        name = "Medium Coin Pack" 
+        description = "1200 Coins"
+        
+        [api.client.coins.stripe.packages.large]
+        coins = 2500
+        price = 20.00
+        name = "Large Coin Pack"
+        description = "2500 Coins"
+        
+        [api.client.coins.stripe.packages.mega]
+        coins = 6000
+        price = 45.00
+        name = "Mega Coin Pack"
+        description = "6000 Coins"
+
+[api.afk]
+path = "ws"
+every = 60
+coins = 2.5
+enabled = true
+
+[antivpn]
+note = "For this to work, generate an API Key on https://proxycheck.io/. If you do not put a key, Heliactyl will automatically disable anti-VPN."
+status = false
+APIKey = "Proxycheck API Key"
+whitelistedIPs = [ "IP address" ]
+
+[whitelist]
+note = "This allows only specific people to be able to login to the Heliactyl dashboard. This does not affect your Panel."
+status = false
+users = [ "User ID" ]
+
+[logging]
+status = false
+webhook = "Webhook URL"
+
+[logging.actions.user]
+signup = true
+"create server" = true
+"gifted coins" = true
+"modify server" = true
+"buy servers" = true
+"buy ram" = true
+"buy cpu" = true
+"buy disk" = true
+
+[logging.actions.admin]
+"set coins" = true
+"add coins" = true
+"set resources" = true
+"set plan" = true
+"create coupon" = true
+"revoke coupon" = true
+"remove account" = true
+"view ip" = true

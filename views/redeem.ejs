@@ -1,0 +1,95 @@
+<%- include('components/top') %>
+
+<main class="flex-1 p-8">
+    <div class="container mx-auto max-w-4xl">
+        <h1 class="text-3xl font-bold text-white mb-8">Redeem Coupon</h1>
+        
+        <% if (req.query.err) { %>
+            <div class="mb-6 bg-red-500/10 border border-red-500/20 rounded-lg p-4">
+                <div class="flex">
+                    <div class="flex-shrink-0">
+                        <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                        </svg>
+                    </div>
+                    <div class="ml-3">
+                        <p class="text-red-400 text-sm">
+                            <% if (req.query.err === 'INVALIDCODE') { %>
+                                The coupon code you entered is invalid or does not exist.
+                            <% } else if (req.query.err === 'ALREADYUSED') { %>
+                                You have already used this coupon code.
+                            <% } else { %>
+                                An error occurred while redeeming your coupon.
+                            <% } %>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        <% } %>
+
+        <% if (req.query.success) { %>
+            <div class="mb-6 bg-green-500/10 border border-green-500/20 rounded-lg p-4">
+                <div class="flex">
+                    <div class="flex-shrink-0">
+                        <svg class="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                        </svg>
+                    </div>
+                    <div class="ml-3">
+                        <p class="text-green-400 text-sm">
+                            Coupon redeemed successfully! Your rewards have been added to your account.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        <% } %>
+
+        <div class="bg-[#1a1f2a]/50 backdrop-blur border border-white/10 rounded-lg p-6">
+            <h2 class="text-xl font-semibold text-white mb-4">Enter Coupon Code</h2>
+            <p class="text-gray-400 mb-6">Enter your coupon code below to redeem rewards such as BrimCoins, RAM, disk space, CPU, or server slots.</p>
+            
+            <form action="/redeem" method="POST" class="space-y-4">
+                <div>
+                    <label for="code" class="block text-sm font-medium text-gray-300 mb-2">Coupon Code</label>
+                    <input type="text" 
+                           id="code" 
+                           name="code" 
+                           placeholder="Enter your coupon code" 
+                           required
+                           class="w-full px-4 py-3 bg-[#0a0a0a] border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                </div>
+                
+                <button type="submit" 
+                        class="w-full bg-orange-500 hover:bg-orange-600 text-white font-medium py-3 px-4 rounded-lg transition duration-200">
+                    Redeem Coupon
+                </button>
+            </form>
+        </div>
+
+        <div class="mt-8 bg-[#1a1f2a]/30 backdrop-blur border border-white/5 rounded-lg p-6">
+            <h3 class="text-lg font-semibold text-white mb-4">Current Balance</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="bg-[#0a0a0a]/50 rounded-lg p-4">
+                    <div class="text-sm text-gray-400">BrimCoins</div>
+                    <div class="text-xl font-bold text-orange-400"><%= coins ? coins.toFixed(2) : '0.00' %></div>
+                </div>
+                <% if (extraresources) { %>
+                    <div class="bg-[#0a0a0a]/50 rounded-lg p-4">
+                        <div class="text-sm text-gray-400">Extra RAM</div>
+                        <div class="text-xl font-bold text-blue-400"><%= Math.floor(extraresources.ram / 1024) %> GB</div>
+                    </div>
+                    <div class="bg-[#0a0a0a]/50 rounded-lg p-4">
+                        <div class="text-sm text-gray-400">Extra Disk</div>
+                        <div class="text-xl font-bold text-green-400"><%= Math.floor(extraresources.disk / 1024) %> GB</div>
+                    </div>
+                    <div class="bg-[#0a0a0a]/50 rounded-lg p-4">
+                        <div class="text-sm text-gray-400">Extra Servers</div>
+                        <div class="text-xl font-bold text-purple-400"><%= extraresources.servers %></div>
+                    </div>
+                <% } %>
+            </div>
+        </div>
+    </div>
+</main>
+
+<%- include('components/bottom') %>
