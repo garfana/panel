@@ -8,61 +8,97 @@ const arciotext = require("../handlers/afk.js");
 
 /* Ensure platform release target is met */
 const garfanaModule = { 
-  name: "Pages", 
-  api_level: 3, 
+  name: "Pages",
+  api_level: 3,
   target_platform: "0.8.0"
 };
 
 if (garfanaModule.target_platform !== settings.version) {
-  console.log(
+  console.error(
     `Module ${garfanaModule.name} does not support this platform release of Garfana. ` +
-    `The module was built for platform ${garfanaModule.target_platform} but is running on version ${settings.version}.`
+    `Expected ${garfanaModule.target_platform}, got ${settings.version}.`
   );
-  process.exit();
+  process.exit(1);
 }
 
 /* Module */
 module.exports.garfanaModule = garfanaModule;
 
 module.exports.load = async function (app, db) {
-  app.all("/", async (req, res) => {
+
+  /* =========================
+     MAIN PAGE HANDLER
+     ========================= */
+
+  app.all("*", async (req, res, next) => {
     try {
-      // Check Pterodactyl session validity
+      // Validate Pterodactyl session
       if (
         req.session.pterodactyl &&
+        req.session.userinfo &&
         req.session.pterodactyl.id !==
           (await db.get("users-" + req.session.userinfo.id))
       ) {
         return res.redirect("/login?prompt=none");
       }
 
-      let theme = indexjs.get(req);
+      const theme = indexjs.get(req);
 
-      // Check must-be-logged-in pages
+      // Must be logged in
       if (
-        theme.settings.mustbeloggedin.includes(req._parsedUrl.pathname) &&
+        theme.settings.mustbeloggedin.includes(req.path) &&
         (!req.session.userinfo || !req.session.pterodactyl)
       ) {
         return res.redirect("/login");
       }
 
-      // Check must-be-admin pages
-      if (theme.settings.mustbeadmin.includes(req._parsedUrl.pathname)) {
+      // Admin pages
+      if (theme.settings.mustbeadmin.includes(req.path)) {
         const renderData = await indexjs.renderdataeval(req, theme);
-        res.render(theme.settings.index, renderData);
-        return;
+        return res.render(theme.settings.index, renderData);
       }
 
-      // Render normal pages
+      // Normal pages
       const renderData = await indexjs.renderdataeval(req, theme);
-      res.render(theme.settings.index, renderData);
+      return res.render(theme.settings.index, renderData);
+
     } catch (err) {
-      console.log(err);
-      res.render("500.ejs", { err });
+      return next(err);
     }
   });
 
-  // Serve static assets
+  /* =========================
+     STATIC ASSETS
+     ========================= */
+
   app.use("/assets", express.static("./assets"));
   app.use("/preline", express.static("./node_modules/preline"));
+
+  /* =========================
+     404 HANDLER
+     ========================= */
+
+  app.use((req, res) => {
+    try {
+      res.status(404).render("404");
+    } catch {
+      res.status(404).send("404 Not Found");
+    }
+  });
+
+  /* =========================
+     GLOBAL ERROR HANDLER
+     ========================= */
+
+  app.use((err, req, res, next) => {
+    console.error("Unhandled error:", err);
+
+    if (res.headersSent) return next(err);
+
+    try {
+      res.status(500).render("500", { err });
+    } catch {
+      res.status(500).send("Internal Server Error");
+    }
+  });
 };
