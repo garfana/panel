@@ -31,7 +31,20 @@ accountSwitcher = true
   [api.client.api]
   enabled = true
   code = "ripw3fpusidfkshfgyjwefknjknsdkhfgsdhfjshefyjsdjfsgdfjsgeoflsdgfhj"
+  [api.client.j4r]
+  enabled = false
 
+    [[api.client.j4r.ads]]
+    name = "Example server 1"
+    invite = "https://discord.gg/example"
+    id = "000000000000000000"
+    coins = 200
+
+    [[api.client.j4r.ads]]
+    name = "Example server 2"
+    invite = "https://discord.gg/example"
+    id = "000000000000000000"
+    coins = 200
  
   [api.client.bot]
   token = ""
