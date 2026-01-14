@@ -27,10 +27,11 @@
     "stripe": "^18.5.0",
     "tailwindcss": "^4.1.13"
   },
-  "scripts": {
-    "start": "node --no-deprecation app.js",
-    "build": "npx tailwindcss -i ./assets/tw.conf -o ./assets/tailwind.css --watch"
-  },
+"scripts": {
+  "dev:css": "npx tailwindcss -i ./assets/tw.conf -o ./assets/tailwind.css --watch",
+  "build": "npx tailwindcss -i ./assets/tw.conf -o ./assets/tailwind.css",
+  "start": "node --no-deprecation app.js"
+},
   "devDependencies": {
     "@babel/cli": "^7.23.9",
     "@babel/core": "^7.24.0",
