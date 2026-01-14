@@ -28,7 +28,7 @@
     "tailwindcss": "^4.1.13"
   },
 "scripts": {
-  "build": "tailwindcss -i ./assets/tw.conf -o ./assets/tailwind.css",
+  "build": "npx tailwindcss -i ./assets/tw.conf -o ./assets/tailwind.css",
   "start": "node --no-deprecation app.js"
 },
   "devDependencies": {
