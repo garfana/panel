@@ -23,7 +23,7 @@
     "nocache": "^4.0.0",
     "node-cache": "^5.1.2",
     "node-fetch": "^2.6.6",
-    "preline": "^2.3.0",
+    "preline": "^3.2.3",
     "stripe": "^18.5.0",
     "tailwindcss": "^4.1.13"
   },
