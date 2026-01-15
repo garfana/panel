@@ -18,7 +18,7 @@
     "express-session": "^1.17.2",
     "express-ws": "^4.0.0",
     "javascript-obfuscator": "^4.0.2",
-    "keyv": "^4.0.4",
+    "keyv": "^5.5.5",
     "moment": "^2.30.1",
     "nocache": "^4.0.0",
     "node-cache": "^5.1.2",
